@@ -5,6 +5,7 @@ interface UseTicTacToe {
   history: { squares: string[] }[];
   winner: string | null;
   play: (squareIndex: number) => void;
+  nextPlayer: string;
 }
 
 export function useTicTacToe(size: number): UseTicTacToe {
@@ -12,7 +13,7 @@ export function useTicTacToe(size: number): UseTicTacToe {
     Array.from({ length: size * size }, () => '')
   );
   const { history, addMove } = useHistory();
-  const { currentPlayer, nextPlayer } = useCurrentPlayer();
+  const { currentPlayer, changePlayer, nextPlayer } = useCurrentPlayer();
 
   const winner = useMemo(() => {
     const lines = [
@@ -56,9 +57,9 @@ export function useTicTacToe(size: number): UseTicTacToe {
           return playerOnSquare;
         });
       });
-      nextPlayer();
+      changePlayer();
     },
-    [currentPlayer, winner, nextPlayer, squares]
+    [currentPlayer, winner, changePlayer, squares]
   );
 
   return {
@@ -66,6 +67,7 @@ export function useTicTacToe(size: number): UseTicTacToe {
     history,
     winner,
     play,
+    nextPlayer,
   };
 }
 
@@ -87,18 +89,28 @@ function useHistory(): UseHistory {
 
 interface UseCurrentPlayer {
   currentPlayer: string;
-  nextPlayer: () => void;
+  changePlayer: () => void;
+  nextPlayer: string;
 }
 
 function useCurrentPlayer(): UseCurrentPlayer {
   const [currentPlayer, setCurrentPlayer] = useState('X');
-  const nextPlayer = useCallback(
-    () => setCurrentPlayer((player) => (player === 'X' ? 'O' : 'X')),
+  const changePlayer = useCallback(
+    () => setCurrentPlayer((player) => switchPlayer(player)),
     []
   );
 
+  const nextPlayer = useMemo(() => switchPlayer(currentPlayer), [
+    currentPlayer,
+  ]);
+
   return {
     currentPlayer,
+    changePlayer,
     nextPlayer,
   };
+
+  function switchPlayer(player: string): string {
+    return player === 'X' ? 'O' : 'X';
+  }
 }

@@ -13,7 +13,7 @@ function range(size: number): number[] {
 
 const Board: React.FC<BoardProps> = ({ size, squares, playSquare }) => {
   return (
-    <div role="grid">
+    <div role="grid" className="game-board">
       {range(size).map((rowIndex) => (
         <div className="board-row" role="row" key={rowIndex}>
           {range(size).map((cellIndex) => {
