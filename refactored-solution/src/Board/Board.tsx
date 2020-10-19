@@ -1,5 +1,6 @@
 import React from 'react';
 import Square from '../Square/Square';
+import './Board.css';
 
 interface BoardProps {
   size: number;

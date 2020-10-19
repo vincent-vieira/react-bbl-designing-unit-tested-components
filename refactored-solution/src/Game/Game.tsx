@@ -1,8 +1,9 @@
 import React from 'react';
 import Board from '../Board/Board';
 import { useTicTacToe } from '../useTicTacToe';
-import GameInfo from './GameInfo';
+import GameInfo from './Info/GameInfo';
 import MovesHistory from './MovesHistory';
+import './Game.css';
 
 const Game = () => {
   const { squares, play, winner, nextPlayer, history } = useTicTacToe(3);
@@ -10,8 +11,10 @@ const Game = () => {
   return (
     <div className="game">
       <Board size={3} squares={squares} playSquare={play} />
-      <GameInfo winner={winner} nextPlayer={nextPlayer} />
-      <MovesHistory history={history} jumpTo={() => {}} />
+      <div className="game-info-and-history">
+        <GameInfo winner={winner} nextPlayer={nextPlayer} />
+        <MovesHistory history={history} jumpTo={() => {}} />
+      </div>
     </div>
   );
 };

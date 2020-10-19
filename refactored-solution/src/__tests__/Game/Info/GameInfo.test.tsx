@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-import GameInfo from '../../Game/GameInfo';
+import GameInfo from '../../../Game/Info/GameInfo';
 
 describe('Game info component', () => {
   it('should display the winner if set', async () => {
@@ -10,7 +10,7 @@ describe('Game info component', () => {
   });
 
   it('should display the next player if set', async () => {
-    render(<GameInfo nextPlayer="X" />);
+    render(<GameInfo nextPlayer="X" winner={null} />);
 
     expect(await screen.findByText('Next player: X')).toBeInTheDocument();
   });

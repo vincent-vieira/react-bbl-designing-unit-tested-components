@@ -1,8 +1,8 @@
 import React from 'react';
+import './MovesHistory.css';
 
 interface MovesHistoryProps {
-  // TODO : change typing
-  history: any[];
+  history: unknown[];
   jumpTo: (moveNumber: number) => void;
 }
 

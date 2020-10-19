@@ -1,0 +1,10 @@
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info-and-history {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
