@@ -1,0 +1,17 @@
+{
+  "name": "react-bbl-designing-unit-tested-components",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "initial-project",
+    "refactored-solution"
+  ],
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-scripts": "3.4.3"
+  }
+}
