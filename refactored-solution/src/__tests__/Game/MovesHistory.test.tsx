@@ -5,7 +5,7 @@ import MovesHistory from '../../Game/MovesHistory';
 
 describe('Moves history component', () => {
   it('should render first move with a special label', async () => {
-    render(<MovesHistory history={[[]]} jumpTo={() => {}} />);
+    render(<MovesHistory history={[[]]} onJumpToMove={() => {}} />);
 
     expect(await screen.findAllByRole('button')).toHaveLength(1);
     expect(await screen.findByRole('button')).toHaveTextContent(
@@ -14,7 +14,7 @@ describe('Moves history component', () => {
   });
 
   it('should render all subsequent moves with their index', async () => {
-    render(<MovesHistory history={[[], [], []]} jumpTo={() => {}} />);
+    render(<MovesHistory history={[[], [], []]} onJumpToMove={() => {}} />);
 
     const navigationButtons = await screen.findAllByRole('button');
     expect(navigationButtons).toHaveLength(3);
@@ -27,7 +27,7 @@ describe('Moves history component', () => {
     async (moveNumber) => {
       const jumpToSpy = jest.fn();
 
-      render(<MovesHistory history={[[], [], []]} jumpTo={jumpToSpy} />);
+      render(<MovesHistory history={[[], [], []]} onJumpToMove={jumpToSpy} />);
 
       userEvent.click(await screen.findByText(`Go to move #${moveNumber}`));
 

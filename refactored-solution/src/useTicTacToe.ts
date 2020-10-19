@@ -6,14 +6,23 @@ interface UseTicTacToe {
   winner: string | null;
   play: (squareIndex: number) => void;
   nextPlayer: string;
+  hasGameStarted: boolean;
+  goBackToMove: (moveNumber: number) => void;
 }
 
 export function useTicTacToe(size: number): UseTicTacToe {
   const [squares, setSquares] = useState(
     Array.from({ length: size * size }, () => '')
   );
-  const { history, addMove } = useHistory();
+  const { history, addMove, resetTo, lastSquares } = useHistory();
   const { currentPlayer, changePlayer, nextPlayer } = useCurrentPlayer();
+  const hasGameStarted = useMemo(() => history.length > 1, [history]);
+
+  const goBackToMove = (moveNumber: number) => {
+    resetTo(moveNumber);
+    // FIXME : reset storage state
+    setSquares(() => lastSquares);
+  };
 
   const winner = useMemo(() => {
     const lines = [
@@ -68,12 +77,16 @@ export function useTicTacToe(size: number): UseTicTacToe {
     winner,
     play,
     nextPlayer,
+    hasGameStarted,
+    goBackToMove,
   };
 }
 
 interface UseHistory {
   history: { squares: string[] }[];
   addMove: (squares: string[]) => void;
+  resetTo: (moveNumber: number) => void;
+  lastSquares: string[];
 }
 
 function useHistory(): UseHistory {
@@ -84,6 +97,17 @@ function useHistory(): UseHistory {
       (squares: string[]) => setHistory((history) => [...history, { squares }]),
       []
     ),
+    resetTo: useCallback(
+      (moveNumber: number) =>
+        setHistory((history) => [...history].splice(0, moveNumber + 1)),
+      []
+    ),
+    lastSquares: useMemo(() => {
+      if (history.length) {
+        return history[history.length - 1].squares;
+      }
+      return [];
+    }, [history]),
   };
 }
 

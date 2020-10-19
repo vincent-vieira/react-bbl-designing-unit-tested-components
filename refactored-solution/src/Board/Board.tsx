@@ -5,19 +5,19 @@ import './Board.css';
 interface BoardProps {
   size: number;
   squares: string[];
-  playSquare: (squareIndex: number) => void;
+  onSquareClicked: (squareIndex: number) => void;
 }
 
-function range(size: number): number[] {
+function rangeTo(size: number): number[] {
   return [...Array(size).keys()];
 }
 
-const Board: React.FC<BoardProps> = ({ size, squares, playSquare }) => {
+const Board: React.FC<BoardProps> = ({ size, squares, onSquareClicked }) => {
   return (
     <div role="grid" className="game-board">
-      {range(size).map((rowIndex) => (
+      {rangeTo(size).map((rowIndex) => (
         <div className="board-row" role="row" key={rowIndex}>
-          {range(size).map((cellIndex) => {
+          {rangeTo(size).map((cellIndex) => {
             const gridIndex = cellIndex + rowIndex * size;
             const playIndex = gridIndex + 1;
 
@@ -25,7 +25,7 @@ const Board: React.FC<BoardProps> = ({ size, squares, playSquare }) => {
               <div role="cell" key={cellIndex}>
                 <Square
                   playerName={squares[gridIndex]}
-                  onClick={() => playSquare(playIndex)}
+                  onClick={() => onSquareClicked(playIndex)}
                 />
               </div>
             );

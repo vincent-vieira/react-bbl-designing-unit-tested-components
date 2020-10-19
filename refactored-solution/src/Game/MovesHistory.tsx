@@ -3,10 +3,10 @@ import './MovesHistory.css';
 
 interface MovesHistoryProps {
   history: unknown[];
-  jumpTo: (moveNumber: number) => void;
+  onJumpToMove: (moveNumber: number) => void;
 }
 
-const MovesHistory: React.FC<MovesHistoryProps> = ({ history, jumpTo }) => {
+const MovesHistory: React.FC<MovesHistoryProps> = ({ history, onJumpToMove: jumpTo }) => {
   return (
     <ol>
       {history.map((_, moveNumber) => (

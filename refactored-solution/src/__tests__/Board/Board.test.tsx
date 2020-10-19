@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Board from '../../Board/Board';
 
-function range(size: number): number[] {
+function rangeTo(size: number): number[] {
   return [...Array(size).keys()];
 }
 
@@ -14,7 +14,7 @@ describe('Board component', () => {
     ${4} | ${16}
   `('with size $size * $size', ({ size, expectedElementsCount }) => {
     it('should be rendered', async () => {
-      render(<Board size={size} squares={[]} playSquare={() => {}} />);
+      render(<Board size={size} squares={[]} onSquareClicked={() => {}} />);
 
       await waitFor(() => {
         expect(screen.queryAllByRole('cell')).toHaveLength(
@@ -24,7 +24,7 @@ describe('Board component', () => {
     });
 
     it.each(
-      range(expectedElementsCount).map((playIndex) => [
+      rangeTo(expectedElementsCount).map((playIndex) => [
         playIndex,
         playIndex + 1,
       ])
@@ -33,7 +33,7 @@ describe('Board component', () => {
       async (gridIndex, playIndex) => {
         const playSquareSpy = jest.fn();
 
-        render(<Board size={size} squares={[]} playSquare={playSquareSpy} />);
+        render(<Board size={size} squares={[]} onSquareClicked={playSquareSpy} />);
 
         const { findByRole } = within(
           (await screen.findAllByRole('cell'))[gridIndex]
