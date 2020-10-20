@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 interface UseTicTacToe {
   squares: string[];
@@ -11,18 +11,14 @@ interface UseTicTacToe {
 }
 
 export function useTicTacToe(size: number): UseTicTacToe {
-  const [squares, setSquares] = useState(
-    Array.from({ length: size * size }, () => '')
-  );
-  const { history, addMove, resetTo, lastSquares } = useHistory();
+  const {
+    history,
+    addMove,
+    resetTo: goBackToMove,
+    lastSquares: squares,
+  } = useHistory(Array.from({ length: size * size }, () => ''));
   const { currentPlayer, changePlayer, nextPlayer } = useCurrentPlayer();
   const hasGameStarted = useMemo(() => history.length > 1, [history]);
-
-  const goBackToMove = (moveNumber: number) => {
-    resetTo(moveNumber);
-    // FIXME : reset storage state
-    setSquares(() => lastSquares);
-  };
 
   const winner = useMemo(() => {
     const lines = [
@@ -48,27 +44,24 @@ export function useTicTacToe(size: number): UseTicTacToe {
     return null;
   }, [squares]);
 
-  useEffect(() => {
-    addMove(squares);
-  }, [addMove, squares]);
-
   const play = useCallback(
     (squareIndex: number) => {
       const storageIndex = squareIndex - 1;
       if (winner || squares[storageIndex]) {
         return;
       }
-      setSquares((squares) => {
-        return squares.map((playerOnSquare, index) => {
+
+      addMove(
+        squares.map((playerOnSquare, index) => {
           if (index === storageIndex) {
             return currentPlayer;
           }
           return playerOnSquare;
-        });
-      });
+        })
+      );
       changePlayer();
     },
-    [currentPlayer, winner, changePlayer, squares]
+    [winner, squares, addMove, changePlayer, currentPlayer]
   );
 
   return {
@@ -89,13 +82,22 @@ interface UseHistory {
   lastSquares: string[];
 }
 
-function useHistory(): UseHistory {
-  const [history, setHistory] = useState<{ squares: string[] }[]>(() => []);
+// FIXME: current player when resetting ?
+function useHistory(initialState: string[]): UseHistory {
+  const { currentPlayer } = useCurrentPlayer();
+
+  const [history, setHistory] = useState<
+    { squares: string[]; player: string }[]
+  >(() => []);
   return {
     history,
     addMove: useCallback(
-      (squares: string[]) => setHistory((history) => [...history, { squares }]),
-      []
+      (squares: string[]) =>
+        setHistory((history) => [
+          ...history,
+          { squares, player: currentPlayer },
+        ]),
+      [currentPlayer]
     ),
     resetTo: useCallback(
       (moveNumber: number) =>
@@ -106,8 +108,8 @@ function useHistory(): UseHistory {
       if (history.length) {
         return history[history.length - 1].squares;
       }
-      return [];
-    }, [history]),
+      return initialState;
+    }, [history, initialState]),
   };
 }
 

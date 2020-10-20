@@ -13,7 +13,7 @@ const Game = () => {
     nextPlayer,
     history,
     hasGameStarted,
-    goBackToMove
+    goBackToMove,
   } = useTicTacToe(3);
 
   return (
