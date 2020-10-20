@@ -4,6 +4,18 @@ import React from 'react';
 import GameStateHistory from '../../Game/GameStateHistory';
 
 describe('Game state history component', () => {
+  it('should display a list', async () => {
+    render(<GameStateHistory history={[]} onJumpToMove={() => {}} />);
+
+    expect(await screen.findByRole('list')).toBeInTheDocument();
+  });
+
+  it('should render all moves as listitems', async () => {
+    render(<GameStateHistory history={[[], [], []]} onJumpToMove={() => {}} />);
+
+    expect(await screen.findAllByRole('listitem')).toHaveLength(3);
+  });
+
   it('should render first move with a special label', async () => {
     render(<GameStateHistory history={[[]]} onJumpToMove={() => {}} />);
 
@@ -27,7 +39,9 @@ describe('Game state history component', () => {
     async (moveNumber) => {
       const jumpToSpy = jest.fn();
 
-      render(<GameStateHistory history={[[], [], []]} onJumpToMove={jumpToSpy} />);
+      render(
+        <GameStateHistory history={[[], [], []]} onJumpToMove={jumpToSpy} />
+      );
 
       userEvent.click(await screen.findByText(`Go to move #${moveNumber}`));
 
