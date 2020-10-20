@@ -1,24 +1,30 @@
 import { useCallback, useMemo, useState } from 'react';
 
+type GameState = Array<{
+  squares: string[];
+  player: string;
+}>;
+
 interface UseTicTacToe {
   squares: string[];
-  history: { squares: string[] }[];
-  winner: string | null;
+  history: GameState;
+  winner?: string;
   play: (squareIndex: number) => void;
   nextPlayer: string;
   hasGameStarted: boolean;
   goBackToMove: (moveNumber: number) => void;
 }
 
+// TODO : restore current playing player with history ?
 export function useTicTacToe(size: number): UseTicTacToe {
   const {
     history,
     addMove,
     resetTo: goBackToMove,
-    lastSquares: squares,
+    current: squares,
   } = useHistory(Array.from({ length: size * size }, () => ''));
   const { currentPlayer, changePlayer, nextPlayer } = useCurrentPlayer();
-  const hasGameStarted = useMemo(() => history.length > 1, [history]);
+  const hasGameStarted = useMemo(() => history.length >= 1, [history]);
 
   const winner = useMemo(() => {
     const lines = [
@@ -41,7 +47,7 @@ export function useTicTacToe(size: number): UseTicTacToe {
         return squares[a];
       }
     }
-    return null;
+    return undefined;
   }, [squares]);
 
   const play = useCallback(
@@ -76,19 +82,17 @@ export function useTicTacToe(size: number): UseTicTacToe {
 }
 
 interface UseHistory {
-  history: { squares: string[] }[];
+  history: GameState;
   addMove: (squares: string[]) => void;
   resetTo: (moveNumber: number) => void;
-  lastSquares: string[];
+  current: string[];
 }
 
 // FIXME: current player when resetting ?
 function useHistory(initialState: string[]): UseHistory {
-  const { currentPlayer } = useCurrentPlayer();
+  const { currentPlayer, setCurrentPlayer } = useCurrentPlayer();
 
-  const [history, setHistory] = useState<
-    { squares: string[]; player: string }[]
-  >(() => []);
+  const [history, setHistory] = useState<GameState>(() => []);
   return {
     history,
     addMove: useCallback(
@@ -104,7 +108,7 @@ function useHistory(initialState: string[]): UseHistory {
         setHistory((history) => [...history].splice(0, moveNumber + 1)),
       []
     ),
-    lastSquares: useMemo(() => {
+    current: useMemo(() => {
       if (history.length) {
         return history[history.length - 1].squares;
       }
@@ -116,6 +120,7 @@ function useHistory(initialState: string[]): UseHistory {
 interface UseCurrentPlayer {
   currentPlayer: string;
   changePlayer: () => void;
+  setCurrentPlayer: React.Dispatch<React.SetStateAction<string>>;
   nextPlayer: string;
 }
 
@@ -133,10 +138,11 @@ function useCurrentPlayer(): UseCurrentPlayer {
   return {
     currentPlayer,
     changePlayer,
+    setCurrentPlayer,
     nextPlayer,
   };
+}
 
-  function switchPlayer(player: string): string {
-    return player === 'X' ? 'O' : 'X';
-  }
+function switchPlayer(player: string): string {
+  return player === 'X' ? 'O' : 'X';
 }
