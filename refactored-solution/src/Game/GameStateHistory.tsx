@@ -1,12 +1,15 @@
 import React from 'react';
-import './MovesHistory.css';
+import './GameStateHistory.css';
 
-interface MovesHistoryProps {
+interface GameStateHistoryProps {
   history: unknown[];
   onJumpToMove: (moveNumber: number) => void;
 }
 
-const MovesHistory: React.FC<MovesHistoryProps> = ({ history, onJumpToMove: jumpTo }) => {
+const GameStateHistory = ({
+  history,
+  onJumpToMove: jumpTo,
+}: GameStateHistoryProps) => {
   return (
     <ol>
       {history.map((_, moveNumber) => (
@@ -20,4 +23,4 @@ const MovesHistory: React.FC<MovesHistoryProps> = ({ history, onJumpToMove: jump
   );
 };
 
-export default MovesHistory;
+export default GameStateHistory;

@@ -2,7 +2,7 @@ import React from 'react';
 import Board from '../Board/Board';
 import { useTicTacToe } from '../useTicTacToe';
 import GameInfo from './Info/GameInfo';
-import MovesHistory from './MovesHistory';
+import GameStateHistory from './GameStateHistory';
 import './Game.css';
 
 const Game = () => {
@@ -22,7 +22,7 @@ const Game = () => {
       <div className="game-info-and-history">
         <GameInfo winner={winner} nextPlayer={nextPlayer} />
         {hasGameStarted && (
-          <MovesHistory history={history} onJumpToMove={goBackToMove} />
+          <GameStateHistory history={history} onJumpToMove={goBackToMove} />
         )}
       </div>
     </div>
