@@ -4,22 +4,30 @@ import userEvent from '@testing-library/user-event';
 import Square from '../../Square/Square';
 
 describe('Square component', () => {
-  it("should display a player's name", async () => {
-    render(<Square playerName="X" />);
+  describe.each(['X', 'O'])('with player %s', (playerName) => {
+    it('should be wrapped in a cell role', async () => {
+      render(<Square playerName={playerName} />);
 
-    expect(
-      await screen.findByRole('button', { name: 'X' })
-    ).toBeInTheDocument();
-  });
+      expect(await screen.findByRole('cell')).toBeInTheDocument();
+    });
 
-  it('should notify parent component when clicking on it', async () => {
-    const handler = jest.fn();
-    render(<Square playerName="X" onClick={handler} />);
+    it("should display player's name", async () => {
+      render(<Square playerName={playerName} />);
 
-    userEvent.click(await screen.findByRole('button', { name: 'X' }));
+      expect(
+        await screen.findByRole('button', { name: playerName })
+      ).toBeInTheDocument();
+    });
 
-    await waitFor(() => {
-      expect(handler).toHaveBeenCalledTimes(1);
+    it('should notify parent component when clicking on it', async () => {
+      const handler = jest.fn();
+      render(<Square playerName={playerName} onClick={handler} />);
+
+      userEvent.click(await screen.findByRole('button', { name: playerName }));
+
+      await waitFor(() => {
+        expect(handler).toHaveBeenCalledTimes(1);
+      });
     });
   });
 });

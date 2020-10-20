@@ -8,9 +8,11 @@ interface SquareProps {
 
 const Square: React.FC<SquareProps> = ({ onClick, playerName }) => {
   return (
-    <button className="square" onClick={() => onClick && onClick()}>
-      {playerName}
-    </button>
+    <div role="cell">
+      <button className="square" onClick={() => onClick && onClick()}>
+        {playerName}
+      </button>
+    </div>
   );
 };
 

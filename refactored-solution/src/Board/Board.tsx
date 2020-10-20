@@ -12,7 +12,7 @@ function rangeTo(size: number): number[] {
   return [...Array(size).keys()];
 }
 
-const Board: React.FC<BoardProps> = ({ size, squares, onSquareClicked }) => {
+const Board = ({ size, squares, onSquareClicked }: BoardProps) => {
   return (
     <div role="grid" className="game-board">
       {rangeTo(size).map((rowIndex) => (
@@ -22,12 +22,11 @@ const Board: React.FC<BoardProps> = ({ size, squares, onSquareClicked }) => {
             const playIndex = gridIndex + 1;
 
             return (
-              <div role="cell" key={cellIndex}>
-                <Square
-                  playerName={squares[gridIndex]}
-                  onClick={() => onSquareClicked(playIndex)}
-                />
-              </div>
+              <Square
+                key={cellIndex}
+                playerName={squares[gridIndex]}
+                onClick={() => onSquareClicked(playIndex)}
+              />
             );
           })}
         </div>

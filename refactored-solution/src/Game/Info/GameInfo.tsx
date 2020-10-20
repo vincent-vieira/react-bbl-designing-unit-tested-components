@@ -1,14 +1,14 @@
 import React from 'react';
 
 interface GameInfoProps {
-  winner: string | null;
+  winner?: string;
   nextPlayer?: string;
 }
 
-const GameInfo: React.FC<GameInfoProps> = ({ nextPlayer, winner }) => {
+const GameInfo = ({ nextPlayer, winner }: GameInfoProps) => {
   return (
     <div className="game-info">
-      {nextPlayer && <div>{`Next player: ${nextPlayer}`}</div>}
+      {!winner && nextPlayer && <div>{`Next player: ${nextPlayer}`}</div>}
       {winner && <div>{`Winner: ${winner}`}</div>}
     </div>
   );
