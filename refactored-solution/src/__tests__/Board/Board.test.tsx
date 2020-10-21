@@ -17,6 +17,22 @@ describe('Board component', () => {
       render(<Board size={size} squares={[]} onSquareClicked={() => {}} />);
 
       await waitFor(() => {
+        expect(screen.queryAllByRole('grid')).toBeInTheDocument();
+      });
+    });
+
+    it(`should render ${size} rows`, async () => {
+      render(<Board size={size} squares={[]} onSquareClicked={() => {}} />);
+
+      await waitFor(() => {
+        expect(screen.queryAllByRole('row')).toHaveLength(size);
+      });
+    });
+
+    it(`should render ${expectedElementsCount} cells`, async () => {
+      render(<Board size={size} squares={[]} onSquareClicked={() => {}} />);
+
+      await waitFor(() => {
         expect(screen.queryAllByRole('cell')).toHaveLength(
           expectedElementsCount
         );
@@ -33,7 +49,9 @@ describe('Board component', () => {
       async (gridIndex, playIndex) => {
         const playSquareSpy = jest.fn();
 
-        render(<Board size={size} squares={[]} onSquareClicked={playSquareSpy} />);
+        render(
+          <Board size={size} squares={[]} onSquareClicked={playSquareSpy} />
+        );
 
         const { findByRole } = within(
           (await screen.findAllByRole('cell'))[gridIndex]
