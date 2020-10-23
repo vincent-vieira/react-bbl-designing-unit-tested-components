@@ -1,7 +1,7 @@
 import React from 'react';
 import './GameStateHistory.css';
 
-interface GameStateHistoryProps {
+type GameStateHistoryProps = {
   history: unknown[];
   onJumpToMove: (moveNumber: number) => void;
 }

@@ -15,7 +15,6 @@ interface UseTicTacToe {
   goBackToMove: (moveNumber: number) => void;
 }
 
-// TODO : restore current playing player with history ?
 export function useTicTacToe(size: number): UseTicTacToe {
   const {
     history,

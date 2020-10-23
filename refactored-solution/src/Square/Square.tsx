@@ -1,7 +1,7 @@
 import React from 'react';
 import './Square.css';
 
-interface SquareProps {
+type SquareProps = {
   playerName: string;
   onClick?: () => void;
 }

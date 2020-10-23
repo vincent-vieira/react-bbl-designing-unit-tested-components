@@ -2,11 +2,11 @@ import React from 'react';
 import Square from '../Square/Square';
 import './Board.css';
 
-interface BoardProps {
+type BoardProps = {
   size: number;
   squares: string[];
   onSquareClicked: (squareIndex: number) => void;
-}
+};
 
 function rangeTo(size: number): number[] {
   return [...Array(size).keys()];

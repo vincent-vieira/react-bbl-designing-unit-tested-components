@@ -1,10 +1,10 @@
 import React from 'react';
 import './GameInfo.css';
 
-interface GameInfoProps {
+type GameInfoProps = {
   winner?: string;
   nextPlayer?: string;
-}
+};
 
 const GameInfo = ({ nextPlayer, winner }: GameInfoProps) => {
   return (
