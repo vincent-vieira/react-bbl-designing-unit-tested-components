@@ -17,7 +17,7 @@ describe('Board component', () => {
       render(<Board size={size} squares={[]} onSquareClicked={() => {}} />);
 
       await waitFor(() => {
-        expect(screen.queryAllByRole('grid')).toBeInTheDocument();
+        expect(screen.queryByRole('grid')).toBeInTheDocument();
       });
     });
 
