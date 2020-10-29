@@ -62,13 +62,20 @@ en ce qui concerne le composant permettant d'afficher et naviguer entre les diff
 Comme dirait *Kent C. Dodds*, créateur de *testing-library* : 
 > Plus vos tests reflètent la manière dont votre programme est utilisé, plus la confiance que vous leur donnerez sera importante.
 
+##### Snapshot testing, kézako ?
+Nous pouvons aussi mettre en place du *snapshot testing* pour nos composants. Afin d'[être efficient](https://kentcdodds.com/blog/effective-snapshot-testing), ce mode de test requiert d'avoir connaissance du contexte dans lequel il peut être utilisé : il majoritairement a pour but d'empêcher les régressions en stockant l'état du rendu d'un composant et le comparer avec le rendu au sein du test. 
+
+**Si jamais le test casse, c'est qu'une modification du code a eu lieu** : soit cette modification est *légitime* et il suffit d'écraser le snapshot par la nouvelle version de celui-ci; ou alors le test vient tout simplement d'empêcher *l'apparition d'une régression* en signalant au développeur que quelque chose d'imprévu a changé au sein du composant cible.
+
 ##### Bonnes pratiques
 - Nommez et structurez vos tests intelligemment : 
   - Gardez à l'esprit que Jest concatène l'ensemble des titres de vos suites de test et de vos tests dans l'ordre dans lequel vous les imbriquez. Cela a pour but de vous inciter à écrire des tests dont les descriptions seront lisibles comme des phrases, intelligibles par un humain.
   - N'hésitez pas à imbriquer vos suites de test avec `describe` pour décrire une fonctionnalité du composant que vous testez
 - Prenez avantage des tests paramétrés afin de faire varier l'état initial ainsi que le comportement attendu au sein du composant testé
-- Plutôt que d'utiliser les attributs des éléments du DOM au sein de vos `expect`ations, utilisez les [matchers fournis au sein de Jest par testing-library](https://github.com/testing-library/jest-dom#custom-matchers)
-- *testing-library* est par design conçue pour vous forcer à créer des composants [aisément accessibles](https://www.a11yproject.com/) en [restreignant les possibilités afin de les requêter](https://testing-library.com/docs/react-testing-library/cheatsheet)
 - Maximisez l'utilisation de tests rédigés de façon asynchrone avec `async/await` et les requêtes de type [findBy](https://testing-library.com/docs/dom-testing-library/api-queries#findby). **JavaScript est un langage permettant d'écrire une majorité de code asynchrone, alors pourquoi ne pas le faire également pour les tests ?**
 - Vous pouvez effectuer des requêtes sur des éléments ayant pour parent un élément spécifique de votre composant grâce à l'utilitaire [*within*](https://testing-library.com/docs/dom-testing-library/api-helpers#within-and-getqueriesforelement-apis)
-- [Evitez ces erreurs communes avec *testing-library*](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library/)
+- [Evitez les erreurs communes avec *testing-library*](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library/), en faisant notamment :
+  - Plutôt que d'utiliser les attributs des éléments du DOM au sein de vos `expect`ations, utilisez les [matchers fournis au sein de Jest par testing-library](https://github.com/testing-library/jest-dom#custom-matchers)
+  - Utilisez `act(() => {})` avec parcimonie, lorsque cela est nécessaire afin d'encapsuler une action pouvant modifier l'état du composant à tester
+  - Utilisez la variable *screen* pour effectuer les requêtes sur vos éléments
+  - *testing-library* est par design conçue pour vous forcer à créer des composants [aisément accessibles](https://www.a11yproject.com/) en [restreignant les possibilités afin de les requêter](https://testing-library.com/docs/react-testing-library/cheatsheet); forcez-vous à utiliser les rôles ARIA dans le testing (et donc la conception) de vos composants

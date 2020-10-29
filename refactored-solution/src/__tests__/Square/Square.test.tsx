@@ -5,6 +5,12 @@ import Square from '../../Square/Square';
 
 describe('Square component', () => {
   describe.each(['X', 'O'])('with player %s', (playerName) => {
+    it('should render properly', async () => {
+      render(<Square playerName={playerName} />);
+
+      expect(await screen.findByRole('cell')).toMatchSnapshot();
+    });
+
     it('should be wrapped in a cell role', async () => {
       render(<Square playerName={playerName} />);
 

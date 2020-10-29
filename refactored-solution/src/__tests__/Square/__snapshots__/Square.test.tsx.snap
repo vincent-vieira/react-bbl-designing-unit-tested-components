@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Square component with player O should render properly 1`] = `
+<div
+  role="cell"
+>
+  <button
+    class="square"
+  >
+    O
+  </button>
+</div>
+`;
+
+exports[`Square component with player X should render properly 1`] = `
+<div
+  role="cell"
+>
+  <button
+    class="square"
+  >
+    X
+  </button>
+</div>
+`;
