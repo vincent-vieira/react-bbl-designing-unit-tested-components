@@ -36,6 +36,7 @@ Que ce soit avec un composant de type *classe* ou *fonction*, il est nécessaire
   - Une ou plusieurs valeurs sous forme de litéral
   - Une [union de types *discriminée*](https://www.typescriptlang.org/docs/handbook/unions-and-intersections.html#union-types)
   - Une [intersection de types](https://www.typescriptlang.org/docs/handbook/unions-and-intersections.html#intersection-types)
+
   **Un alias de type peut être générique.** Cela permet donc une grande flexibilité dans sa déclaration.
 
 - *Est-il préférable d'utiliser les interfaces ou les alias de type afin de décrire le type des propriétés d'entrée ou l'état d'un composant ?*
