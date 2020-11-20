@@ -86,7 +86,7 @@ function useGameState(initialState: string[]): UseGameState {
   const [currentStateIndex, setCurrentStateIndex] = useState(0);
 
   const current = useMemo(() => {
-    if (history.length) {
+    if (history.length && currentStateIndex > 0) {
       return history[currentStateIndex - 1].squares;
     }
     return initialState;
@@ -113,7 +113,8 @@ function useGameState(initialState: string[]): UseGameState {
     jumpTo: useCallback(
       (moveNumber: number) => {
         setCurrentStateIndex(moveNumber);
-        setCurrentPlayer(switchPlayer(history[moveNumber - 1].currentPlayer));
+        const index = moveNumber === 0 ? 0 : moveNumber - 1;
+        setCurrentPlayer(switchPlayer(history[index].currentPlayer));
       },
       [history, setCurrentPlayer]
     ),
