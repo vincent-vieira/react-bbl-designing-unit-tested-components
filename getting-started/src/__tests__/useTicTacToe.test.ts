@@ -2,28 +2,22 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import { useTicTacToe } from '../useTicTacToe';
 
 describe('Tic tac toe business hook', () => {
-  describe.each`
-    size | expectedElementsCount
-    ${3} | ${9}
-    ${4} | ${16}
-  `(
-    'current game state with size $size * $size',
-    ({ size, expectedElementsCount }) => {
+  describe('game state', () => {
+    describe.each`
+      size | expectedElementsCount
+      ${3} | ${9}
+      ${4} | ${16}
+    `('with size $size * $size', ({ size, expectedElementsCount }) => {
       it('should be initialized properly', () => {
         const { result } = renderHook(() => useTicTacToe(size));
 
-        expect(result.current.squares).toEqual(
-          Array(expectedElementsCount).fill('')
-        );
+        const squares = Array(expectedElementsCount).fill('');
+
+        expect(result.current.squares).toEqual(squares);
+        expect(result.current.history).toEqual([
+          { currentPlayer: 'X', squares },
+        ]);
       });
-    }
-  );
-
-  describe('game state', () => {
-    it('should be initialized properly', () => {
-      const { result } = renderHook(() => useTicTacToe(3));
-
-      expect(result.current.history).toEqual([]);
     });
 
     it('should evolve when adding a move and store squares & current player', () => {
@@ -34,6 +28,7 @@ describe('Tic tac toe business hook', () => {
       });
 
       expect(result.current.history).toEqual([
+        { currentPlayer: 'X', squares: Array(9).fill('') },
         {
           currentPlayer: 'X',
           squares: ['', '', '', 'X', '', '', '', '', ''],
@@ -46,10 +41,10 @@ describe('Tic tac toe business hook', () => {
       act(() => result.current.play(4));
       act(() => result.current.play(6));
 
-      act(() => result.current.goBackToMove(1));
+      act(() => result.current.goBackToMove(2));
 
-      expect(result.current.history).toHaveLength(2);
       expect(result.current.history).toEqual([
+        { currentPlayer: 'X', squares: Array(9).fill('') },
         {
           currentPlayer: 'X',
           squares: ['', '', '', 'X', '', '', '', '', ''],
@@ -78,12 +73,12 @@ describe('Tic tac toe business hook', () => {
       act(() => result.current.play(6));
       act(() => result.current.play(8));
 
-      act(() => result.current.goBackToMove(2));
+      act(() => result.current.goBackToMove(3));
 
       act(() => result.current.play(5));
 
-      expect(result.current.history).toHaveLength(3);
       expect(result.current.history).toEqual([
+        { currentPlayer: 'X', squares: Array(9).fill('') },
         {
           currentPlayer: 'X',
           squares: ['', '', '', 'X', '', '', '', '', ''],
@@ -162,7 +157,19 @@ describe('Tic tac toe business hook', () => {
       expect(result.current.nextPlayer).toBe('O');
     });
 
-    it('should be reset by navigation from history', () => {});
+    it('should be reset by navigation from history', () => {
+      const { result } = renderHook(() => useTicTacToe(3));
+
+      act(() => result.current.play(4));
+      act(() => result.current.play(6));
+      act(() => result.current.play(8));
+
+      act(() => result.current.goBackToMove(3));
+
+      act(() => result.current.play(5));
+
+      expect(result.current.nextPlayer).toEqual('O');
+    });
   });
 
   it('should expose a flag showing that game has not yet started', () => {

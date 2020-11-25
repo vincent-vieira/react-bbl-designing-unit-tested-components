@@ -1,9 +1,9 @@
-import React from 'react';
+import { TicTacToePlayer } from '../../useTicTacToe';
 import './GameInfo.css';
 
 type GameInfoProps = {
-  winner?: string;
-  nextPlayer?: string;
+  winner?: TicTacToePlayer;
+  nextPlayer?: TicTacToePlayer;
 };
 
 const GameInfo = ({ nextPlayer, winner }: GameInfoProps) => {

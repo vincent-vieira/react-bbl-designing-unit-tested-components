@@ -42,6 +42,10 @@ Que ce soit avec un composant de type *classe* ou *fonction*, il est nécessaire
 - *Est-il préférable d'utiliser les interfaces ou les alias de type afin de décrire le type des propriétés d'entrée ou l'état d'un composant ?*
   [Cela dépend](https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/types_or_interfaces).
 
+- Quels sont les intérêts des types `TicTacToePlayer` et `TicTacToeSquares` ? 
+
+En appliquant une restriction sur les valeurs possibles dans l'ensemble des valeurs possibles de type `string`, on donne un sens sémantiquement parlant à notre alias de type. Ainsi à la relecture du code sans aucune connaissance du contexte métier, on identifiera plus facilement ce que représente notre type ainsi que les valeurs utilisées pour représenter notre joueur, et l'ensemble des cellules du plateau.
+
 #### Découpler les différents fichiers
 Lorsque l'on réalise une application avec un framework comme React, on va chercher à avoir un maximum de *dumb components* (aussi appelés *composants présentationnels*). Un composant "idiot" est un composant n'ayant que pour rôle de gérer l'affichage de données qu'il obtient d'autres composants. Ces composants sont appelés *smart components* (ou *composants conteneurs*) car ils possèdent une intelligence dans la gestion de ces données.
 

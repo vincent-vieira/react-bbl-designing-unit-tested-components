@@ -1,16 +1,13 @@
-import React from 'react';
 import Square from '../Square/Square';
+import { TicTacToeSquares } from '../useTicTacToe';
+import { rangeTo } from '../utils';
 import './Board.css';
 
 type BoardProps = {
   size: number;
-  squares: string[];
+  squares: TicTacToeSquares;
   onSquareClicked: (squareIndex: number) => void;
 };
-
-function rangeTo(size: number): number[] {
-  return [...Array(size).keys()];
-}
 
 const Board = ({ size, squares, onSquareClicked }: BoardProps) => {
   return (
@@ -23,7 +20,7 @@ const Board = ({ size, squares, onSquareClicked }: BoardProps) => {
 
             return (
               <Square
-                key={cellIndex}
+                key={gridIndex}
                 playerName={squares[gridIndex]}
                 onClick={() => onSquareClicked(playIndex)}
               />

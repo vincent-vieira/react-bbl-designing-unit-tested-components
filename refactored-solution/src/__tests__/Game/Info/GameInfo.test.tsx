@@ -1,37 +1,50 @@
 import { render, screen } from '@testing-library/react';
-import React from 'react';
 import GameInfo from '../../../Game/Info/GameInfo';
+import { TicTacToePlayer } from '../../../useTicTacToe';
 
 describe('Game info component', () => {
   describe('when winner is absent', () => {
-    it('should display the next player if set', async () => {
-      render(<GameInfo nextPlayer="X" />);
+    it.each(['X', 'O'] as Array<TicTacToePlayer>)(
+      'should display the next player "%s" if set',
+      async (nextPlayer) => {
+        render(<GameInfo nextPlayer={nextPlayer} />);
 
-      expect(await screen.findByText('Next player: X')).toBeInTheDocument();
-    });
+        expect(
+          await screen.findByText(`Next player: ${nextPlayer}`)
+        ).toBeInTheDocument();
+      }
+    );
 
-    it('should not display the winner', () => {
-      render(<GameInfo nextPlayer="X" />);
+    it.each(['X', 'O'] as Array<TicTacToePlayer>)(
+      'should not display the winner "%s"',
+      (nextPlayer) => {
+        render(<GameInfo nextPlayer={nextPlayer} />);
 
-      const winnerElement = screen.queryByText('Winner: X');
-      expect(winnerElement).toBeFalsy();
-      expect(winnerElement).not.toBeInTheDocument();
-    });
+        const winnerElement = screen.queryByText('Winner:');
+        expect(winnerElement).toBeFalsy();
+        expect(winnerElement).not.toBeInTheDocument();
+      }
+    );
   });
 
-  describe('when winner is set', () => {
-    it('should not display the next player', () => {
-      render(<GameInfo winner="X" nextPlayer="O" />);
+  describe.each(['X', 'O'] as Array<TicTacToePlayer>)(
+    'when winner is set as player "%s"',
+    (winner) => {
+      it('should not display the next player', () => {
+        render(<GameInfo winner={winner} nextPlayer="O" />);
 
-      const nextPlayerElement = screen.queryByText('Next player: X');
-      expect(nextPlayerElement).toBeFalsy();
-      expect(nextPlayerElement).not.toBeInTheDocument();
-    });
+        const nextPlayerElement = screen.queryByText('Next player:');
+        expect(nextPlayerElement).toBeFalsy();
+        expect(nextPlayerElement).not.toBeInTheDocument();
+      });
 
-    it('should display the winner', async () => {
-      render(<GameInfo winner="X" />);
+      it('should display the winner', async () => {
+        render(<GameInfo winner={winner} />);
 
-      expect(await screen.findByText('Winner: X')).toBeInTheDocument();
-    });
-  });
+        expect(
+          await screen.findByText(`Winner: ${winner}`)
+        ).toBeInTheDocument();
+      });
+    }
+  );
 });

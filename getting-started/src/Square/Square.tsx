@@ -1,12 +1,13 @@
-import React from 'react';
+import { FC } from 'react';
+import { TicTacToePlayer } from '../Models';
 import './Square.css';
 
-interface SquareProps {
-  playerName: string;
+type SquareProps = {
+  playerName: TicTacToePlayer;
   onClick?: () => void;
-}
+};
 
-const Square: React.FC<SquareProps> = ({ onClick, playerName }) => {
+const Square: FC<SquareProps> = ({ onClick, playerName }) => {
   return (
     <div role="cell">
       <button className="square" onClick={() => onClick && onClick()}>

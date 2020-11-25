@@ -1,0 +1,35 @@
+image: node:current
+
+stages:
+  - build
+  - test
+
+variables:
+  CI: 'true'
+
+cache:
+  paths:
+    - node_modules/
+    - .yarn
+
+Install dependencies:
+  stage: .pre
+  script:
+    - yarn config set cache-folder .yarn
+    - yarn install
+
+Build required projects:
+  stage: build
+  before_script:
+    - yarn config set cache-folder .yarn
+  script:
+    - yarn workspace initial-project build
+    - yarn workspace refactored-solution build
+
+Test required projects:
+  stage: test
+  before_script:
+    - yarn config set cache-folder .yarn
+  script:
+    - yarn workspace initial-project test
+    - yarn workspace refactored-solution test

@@ -1,18 +1,20 @@
-import React from 'react';
+import { useMemo } from 'react';
+import { rangeTo } from '../utils';
 import './GameStateHistory.css';
 
-interface GameStateHistoryProps {
-  history: unknown[];
+type GameStateHistoryProps = {
+  movesNumber: number;
   onJumpToMove: (moveNumber: number) => void;
-}
+};
 
 const GameStateHistory = ({
-  history,
+  movesNumber,
   onJumpToMove: jumpTo,
 }: GameStateHistoryProps) => {
+  const movesNumbers = useMemo(() => rangeTo(movesNumber), [movesNumber]);
   return (
     <ol>
-      {history.map((_, moveNumber) => (
+      {movesNumbers.map((moveNumber) => (
         <li key={moveNumber}>
           <button onClick={() => jumpTo(moveNumber)}>
             {`Go to ${moveNumber ? `move #${moveNumber}` : 'game start'}`}
