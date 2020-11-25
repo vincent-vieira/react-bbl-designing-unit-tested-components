@@ -1,11 +1,7 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
 import Board from '../../Board/Board';
-
-function rangeTo(size: number): number[] {
-  return [...Array(size).keys()];
-}
+import { rangeTo } from '../../utils';
 
 describe('Board component', () => {
   describe.each`

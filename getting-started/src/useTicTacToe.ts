@@ -1,21 +1,24 @@
 import { useCallback, useMemo, useState } from 'react';
 
+export type TicTacToePlayer = 'X' | 'O';
+export type TicTacToeSquares = Array<TicTacToePlayer>;
+type EmptyTicTacToeSquares = Array<''>;
+
 type GameState = {
-  squares: string[];
-  currentPlayer: string;
+  squares: TicTacToeSquares;
+  currentPlayer: TicTacToePlayer;
 };
 
 interface UseTicTacToe {
-  squares: string[];
+  squares: TicTacToeSquares;
   history: GameState[];
-  winner?: string;
+  winner?: TicTacToePlayer;
   play: (squareIndex: number) => void;
-  nextPlayer: string;
+  nextPlayer: TicTacToePlayer;
   hasGameStarted: boolean;
   goBackToMove: (moveNumber: number) => void;
 }
 
-// TODO : restore current playing player with history ?
 export function useTicTacToe(size: number): UseTicTacToe {
   const {
     history,
@@ -23,8 +26,8 @@ export function useTicTacToe(size: number): UseTicTacToe {
     jumpTo: goBackToMove,
     current: squares,
   } = useGameState(Array.from({ length: size * size }, () => ''));
-  const { currentPlayer, changePlayer, nextPlayer } = useCurrentPlayer();
-  const hasGameStarted = useMemo(() => history.length >= 1, [history]);
+  const { currentPlayer, switchCurrentPlayer, nextPlayer } = useCurrentPlayer();
+  const hasGameStarted = useMemo(() => history.length > 1, [history]);
 
   const winner = useMemo(() => {
     const lines = [
@@ -58,9 +61,9 @@ export function useTicTacToe(size: number): UseTicTacToe {
       }
 
       addMove(storageIndex, currentPlayer);
-      changePlayer();
+      switchCurrentPlayer();
     },
-    [winner, squares, addMove, changePlayer, currentPlayer]
+    [winner, squares, addMove, switchCurrentPlayer, currentPlayer]
   );
 
   return {
@@ -76,62 +79,68 @@ export function useTicTacToe(size: number): UseTicTacToe {
 
 interface UseGameState {
   history: GameState[];
-  addMove: (squareIndex: number, currentPlayer: string) => void;
+  addMove: (squareIndex: number, currentPlayer: TicTacToePlayer) => void;
   jumpTo: (moveNumber: number) => void;
-  current: string[];
+  current: TicTacToeSquares;
 }
 
-function useGameState(initialState: string[]): UseGameState {
-  const { setCurrentPlayer } = useCurrentPlayer();
-  const [history, setHistory] = useState<GameState[]>(() => []);
-  const [currentStateIndex, setCurrentStateIndex] = useState(0);
+function useGameState(initialState: EmptyTicTacToeSquares): UseGameState {
+  const { currentPlayer, changeCurrentPlayer } = useCurrentPlayer();
+  const [history, setHistory] = useState<GameState[]>(() => [
+    { squares: (initialState as unknown) as TicTacToeSquares, currentPlayer },
+  ]);
+  const [currentStateIndex, setCurrentStateIndex] = useState(1);
+  const current = useMemo(() => history[currentStateIndex - 1].squares, [
+    currentStateIndex,
+    history,
+  ]);
 
-  const current = useMemo(() => {
-    if (history.length) {
-      return history[currentStateIndex - 1].squares;
-    }
-    return initialState;
-  }, [currentStateIndex, history, initialState]);
+  const addMove = useCallback(
+    (squareIndex: number, currentPlayer: TicTacToePlayer) => {
+      const squares = current.map((playerOnSquare, index) => {
+        if (index === squareIndex) {
+          return currentPlayer;
+        }
+        return playerOnSquare;
+      });
+
+      setHistory((history) => [
+        ...history.slice(0, currentStateIndex),
+        { squares, currentPlayer },
+      ]);
+      setCurrentStateIndex((stateIndex) => stateIndex + 1);
+    },
+    [current, currentStateIndex]
+  );
+
+  const jumpTo = useCallback(
+    (moveNumber: number) => {
+      setCurrentStateIndex(() => moveNumber);
+      changeCurrentPlayer(() =>
+        switchPlayer(history[moveNumber - 1].currentPlayer)
+      );
+    },
+    [history, changeCurrentPlayer]
+  );
+
   return {
     history,
-    addMove: useCallback(
-      (squareIndex: number, currentPlayer: string) => {
-        const squares = current.map((playerOnSquare, index) => {
-          if (index === squareIndex) {
-            return currentPlayer;
-          }
-          return playerOnSquare;
-        });
-
-        setHistory((history) => [
-          ...history.slice(0, currentStateIndex),
-          { squares, currentPlayer },
-        ]);
-        setCurrentStateIndex((stateIndex) => stateIndex + 1);
-      },
-      [current, currentStateIndex]
-    ),
-    jumpTo: useCallback(
-      (moveNumber: number) => {
-        setCurrentStateIndex(moveNumber);
-        setCurrentPlayer(switchPlayer(history[moveNumber - 1].currentPlayer));
-      },
-      [history, setCurrentPlayer]
-    ),
+    addMove,
+    jumpTo,
     current,
   };
 }
 
 interface UseCurrentPlayer {
-  currentPlayer: string;
-  changePlayer: () => void;
-  setCurrentPlayer: React.Dispatch<React.SetStateAction<string>>;
-  nextPlayer: string;
+  currentPlayer: TicTacToePlayer;
+  changeCurrentPlayer: React.Dispatch<React.SetStateAction<TicTacToePlayer>>;
+  switchCurrentPlayer: () => void;
+  nextPlayer: TicTacToePlayer;
 }
 
 function useCurrentPlayer(): UseCurrentPlayer {
-  const [currentPlayer, setCurrentPlayer] = useState('X');
-  const changePlayer = useCallback(
+  const [currentPlayer, setCurrentPlayer] = useState('X' as TicTacToePlayer);
+  const switchCurrentPlayer = useCallback(
     () => setCurrentPlayer((player) => switchPlayer(player)),
     []
   );
@@ -142,12 +151,12 @@ function useCurrentPlayer(): UseCurrentPlayer {
 
   return {
     currentPlayer,
-    changePlayer,
-    setCurrentPlayer,
+    switchCurrentPlayer,
+    changeCurrentPlayer: setCurrentPlayer,
     nextPlayer,
   };
 }
 
-function switchPlayer(player: string): string {
+function switchPlayer(player: TicTacToePlayer): TicTacToePlayer {
   return player === 'X' ? 'O' : 'X';
 }

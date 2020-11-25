@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 
 interface SquareProps {
   onClick: () => void;
@@ -18,7 +18,7 @@ interface BoardProps {
   onClick: (index: number) => void;
 }
 
-class Board extends React.Component<BoardProps> {
+class Board extends Component<BoardProps> {
   renderSquare(i: number) {
     return (
       <Square
@@ -57,7 +57,7 @@ interface GameState {
   xIsNext: boolean;
 }
 
-export class Game extends React.Component<unknown, GameState> {
+export class Game extends Component<unknown, GameState> {
   constructor(props: unknown) {
     super(props);
     this.state = {
